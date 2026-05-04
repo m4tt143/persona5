@@ -333,12 +333,31 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
 .home-title{
   font-family:var(--font-bangers);
   font-size:clamp(5rem,15vw,11rem);
-  line-height:.88;letter-spacing:6px;
+  line-height:.88;
+  letter-spacing:6px;
   color:var(--white);
   text-shadow:6px 6px 0 var(--black),-2px -2px 0 var(--black);
   animation:slam .4s cubic-bezier(.22,1,.36,1) .4s both;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
 }
-.home-title span{color:var(--black);-webkit-text-stroke:3px var(--white);display:block;animation:slam .4s cubic-bezier(.22,1,.36,1) .55s both;}
+.home-title span{
+  color:var(--black);
+  -webkit-text-stroke:3px var(--white);
+  text-shadow:none;
+  display:block;
+  line-height:.88;
+  margin:0;
+  padding:0;
+  animation:slam .4s cubic-bezier(.22,1,.36,1) .55s both;
+}
+.home-title .word-fill{
+  color:var(--white);
+  -webkit-text-stroke:0;
+  text-shadow:6px 6px 0 var(--black),-2px -2px 0 var(--black);
+}
 .home-sub{
   font-family:var(--font-marker);
   font-size:clamp(1rem,2.2vw,1.5rem);
@@ -760,7 +779,7 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
       <div class="home-content">
         <div class="home-eyebrow">THE PHANTOM THIEVES OF HEARTS</div>
         <h1 class="home-title">
-          TAKE<br><span>YOUR</span><br>HEART
+          <span class="word-fill">TAKE</span><span>YOUR</span><span class="word-fill">HEART</span>
         </h1>
         <p class="home-sub">— <span class="jitter">Steal</span> it, before it steals you. —</p>
         <div class="home-quicknav">
