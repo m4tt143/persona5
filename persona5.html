@@ -421,6 +421,9 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
   background:var(--red);transform:skewX(-8deg);
 }
 
+.section-copy{font-family:var(--font-marker);font-size:1rem;line-height:1.8;color:rgba(255,255,255,.9);max-width:760px;margin:24px 0;}
+#screen-abilities .section-copy{color:rgba(0,0,0,.85);}
+
 .card-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -475,6 +478,24 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
 .stat-label{font-family:var(--font-rubik);font-size:.5rem;letter-spacing:2px;color:var(--black);margin-bottom:2px;}
 .stat-track{width:100%;height:7px;background:#ddd;border:2px solid var(--black);clip-path:polygon(0 0,100% 0,97% 100%,3% 100%);}
 .stat-fill{height:100%;background:var(--red);transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:28px;}
+  .feature-card{background:var(--white);color:var(--black);border:4px solid var(--black);clip-path:polygon(0 0,90% 0,100% 8%,100% 100%,10% 100%,0 92%);box-shadow:8px 8px 0 var(--black),8px 8px 0 2px var(--red);transition:transform var(--snap),box-shadow var(--snap);cursor:none;overflow:hidden;}
+  .feature-card:hover{transform:translate(-5px,-5px) rotate(-1deg);box-shadow:14px 14px 0 var(--black),14px 14px 0 2px var(--red);}
+  .feature-ico{height:120px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(229,0,18,.2),rgba(255,215,0,.12));color:var(--red);font-family:var(--font-bangers);font-size:3rem;}
+  .feature-content{padding:24px;}
+  .feature-title{font-family:var(--font-bangers);font-size:1.5rem;letter-spacing:2px;margin-bottom:14px;}
+  .feature-copy{font-family:var(--font-marker);font-size:.95rem;line-height:1.75;color:rgba(0,0,0,.8);}
+  .feature-tag,.highlight-tag{font-family:var(--font-rubik);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--red);display:block;margin-bottom:10px;}
+  .highlight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:28px;}
+  .highlight-card{background:var(--black);color:var(--white);border:4px solid var(--red);clip-path:polygon(0 0,90% 0,100% 8%,100% 100%,10% 100%,0 92%);box-shadow:8px 8px 0 var(--black),8px 8px 0 2px var(--red);transition:transform var(--snap),box-shadow var(--snap);cursor:none;overflow:hidden;}
+  .highlight-card:hover{transform:translate(-5px,-5px) rotate(-1deg);box-shadow:14px 14px 0 var(--black),14px 14px 0 2px var(--red);}
+  .highlight-media{height:220px;overflow:hidden;}
+  .highlight-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--snap),filter var(--snap);filter:grayscale(50%) contrast(120%);}
+  .highlight-card:hover .highlight-media img{transform:scale(1.05);filter:grayscale(0%) contrast(115%);}
+  .highlight-body{padding:24px;}
+  .highlight-title{font-family:var(--font-bangers);font-size:1.45rem;margin-bottom:12px;}
+  .highlight-copy{font-family:var(--font-marker);font-size:.95rem;line-height:1.75;color:rgba(255,255,255,.9);}
 
 /* ═══════════════════════════════════════════════════════════════
    SCREEN: ABOUT
@@ -740,6 +761,18 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
         <span>CONFIDANTS</span>
         <span class="nb-pip"></span>
       </button>
+      <button class="nav-btn" data-target="members">
+        <span>MEMBERS</span>
+        <span class="nb-pip"></span>
+      </button>
+      <button class="nav-btn" data-target="abilities">
+        <span>ABILITIES</span>
+        <span class="nb-pip"></span>
+      </button>
+      <button class="nav-btn" data-target="highlights">
+        <span>HIGHLIGHTS</span>
+        <span class="nb-pip"></span>
+      </button>
       <button class="nav-btn" data-target="about">
         <span>ABOUT US</span>
         <span class="nb-pip"></span>
@@ -784,6 +817,9 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
         <p class="home-sub">— <span class="jitter">Steal</span> it, before it steals you. —</p>
         <div class="home-quicknav">
           <button class="qnav-btn" data-target="confidants"><span>CONFIDANTS</span></button>
+          <button class="qnav-btn" data-target="members"><span>MEMBERS</span></button>
+          <button class="qnav-btn" data-target="abilities"><span>ABILITIES</span></button>
+          <button class="qnav-btn" data-target="highlights"><span>HIGHLIGHTS</span></button>
           <button class="qnav-btn" data-target="about"><span>ABOUT US</span></button>
           <button class="qnav-btn" data-target="manifesto"><span>MANIFESTO</span></button>
           <button class="qnav-btn" data-target="palaces"><span>PALACES</span></button>
@@ -853,6 +889,67 @@ body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
           </div>
         </article>
 
+      </div>
+    </section>
+
+    <!-- ── MEMBERS ── -->
+    <section id="screen-members" class="screen halftone" data-screen="members">
+      <h2 class="screen-title">MEMBERS</h2>
+      <p class="section-copy">A dossier of the crew that makes every strike feel personal — from muscle to mastermind.</p>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/rj/700/420" alt="Ryuji"/></div>
+          <div class="gif-badge">CHARGE</div>
+          <div class="card-arcana">STRENGTH</div>
+          <div class="card-body">
+            <h3>Ryuji</h3>
+            <p class="char-role">ROLE: <span>BREAKER</span></p>
+            <p>Raw speed and heart, ready to punch through walls and expectations. Ryuji is the team’s explosive spark.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/futaba/700/420" alt="Futaba"/></div>
+          <div class="gif-badge">HACKER</div>
+          <div class="card-arcana">SAGE</div>
+          <div class="card-body">
+            <h3>Futaba</h3>
+            <p class="char-role">ROLE: <span>SUPPORT</span></p>
+            <p>The crew’s unseen edge. Futaba turns code into combat, keeps enemies disoriented, and controls the Metaverse from the backline.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/makoto/700/420" alt="Makoto"/></div>
+          <div class="gif-badge">ANALYST</div>
+          <div class="card-arcana">JUSTICE</div>
+          <div class="card-body">
+            <h3>Makoto</h3>
+            <p class="char-role">ROLE: <span>TACTIC</span></p>
+            <p>Sharp, steady, and strategic. Makoto brings precision to every plan and keeps the team balanced when the risk climbs.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── ABILITIES ── -->
+    <section id="screen-abilities" class="screen" data-screen="abilities">
+      <h2 class="screen-title">ABILITIES</h2>
+      <p class="section-copy">Signature moves and Phantom tricks with power, speed, and theatrical drama.</p>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-ico">⚡</div><div class="feature-content"><span class="feature-tag">SPEED</span><h3 class="feature-title">Psycho Rush</h3><p class="feature-copy">A kinetic barrage that moves faster than thought, overwhelming defenses and seizing control.</p></div></article>
+        <article class="feature-card"><div class="feature-ico">🔥</div><div class="feature-content"><span class="feature-tag">STYLE</span><h3 class="feature-title">Flare Rebellion</h3><p class="feature-copy">Explosive flame and showmanship combined — each strike leaves a mark on the battlefield and the soul.</p></div></article>
+        <article class="feature-card"><div class="feature-ico">🔮</div><div class="feature-content"><span class="feature-tag">DOMINANCE</span><h3 class="feature-title">Heart Surge</h3><p class="feature-copy">A peak burst of energy that turns the tide, powered by conviction and the crew’s shared resolve.</p></div></article>
+        <article class="feature-card"><div class="feature-ico">👁️</div><div class="feature-content"><span class="feature-tag">STEALTH</span><h3 class="feature-title">Ghost Drift</h3><p class="feature-copy">Slip through the unseen gaps, disappear into the chaos, and strike before the alarm can sound.</p></div></article>
+      </div>
+    </section>
+
+    <!-- ── HIGHLIGHTS ── -->
+    <section id="screen-highlights" class="screen halftone" data-screen="highlights">
+      <h2 class="screen-title">HIGHLIGHTS</h2>
+      <p class="section-copy">Visual moments from the mission vault: sharp, raw, and built to feel cinematic.</p>
+      <div class="highlight-grid">
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight1/700/420" alt="Heist moment"/></div><div class="highlight-body"><span class="highlight-tag">MISSION</span><h3 class="highlight-title">Midnight Infiltration</h3><p class="highlight-copy">A slick, dangerous entry where every shadow became cover and every movement had meaning.</p></div></article>
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight2/700/420" alt="Crew style"/></div><div class="highlight-body"><span class="highlight-tag">STYLE</span><h3 class="highlight-title">Crimson Motion</h3><p class="highlight-copy">The team’s visuals are the weapon: bold, jagged, and unforgettable in every frame.</p></div></article>
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight3/700/420" alt="Tech command"/></div><div class="highlight-body"><span class="highlight-tag">TECH</span><h3 class="highlight-title">Digital Command</h3><p class="highlight-copy">Encrypted grids and silent hacks create the backdrop for every successful operation.</p></div></article>
       </div>
     </section>
 

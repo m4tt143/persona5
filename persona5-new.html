@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PHANTOM THIEVES — TAKE YOUR HEART</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Permanent+Marker&family=Rubik+Mono+One&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --red: #E50012;
+  --black: #000000;
+  --white: #FFFFFF;
+  --yellow: #FFD700;
+  --gray: #111111;
+  --gray2: #1e1e1e;
+  --nav-w: 240px;
+  --snap: 0.08s ease-in-out;
+  --slide: 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:var(--white);font-family:var(--font-anton);cursor:none;}
+button{font:inherit;border:none;background:none;color:inherit;}
+img{display:block;width:100%;height:auto;}
+#cur-o{position:fixed;width:34px;height:34px;border:3px solid var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width var(--snap),height var(--snap),border-color var(--snap),background var(--snap);mix-blend-mode:difference;}
+#cur-o::before,#cur-o::after{content:'';position:absolute;background:var(--red);}
+#cur-o::before{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%);}
+#cur-o::after{width:100%;height:2px;top:50%;left:0;transform:translateY(-50%);}
+#cur-i{position:fixed;width:7px;height:7px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+body.hov #cur-o{width:50px;height:50px;background:rgba(229,0,18,.1);}
+#flash{position:fixed;inset:0;background:var(--red);z-index:99999;pointer-events:none;opacity:0;}
+#flash.go{animation:flash-out .25s ease-out forwards;}
+@keyframes flash-out{from{opacity:.55}to{opacity:0}}
+#noise{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:nz .6s steps(2) infinite;}
+@keyframes nz{0%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(2px,-1px)}75%{transform:translate(-1px,2px)}100%{transform:translate(0,0)}}
+.halftone{position:relative;}
+.halftone::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(229,0,18,.18) 1.5px,transparent 1.5px);background-size:20px 20px;pointer-events:none;z-index:0;}
+#app{display:flex;width:100%;height:100%;}
+#sidebar{width:var(--nav-w);min-width:var(--nav-w);height:100%;background:var(--black);border-right:4px solid var(--red);display:flex;flex-direction:column;position:relative;z-index:100;clip-path:polygon(0 0,100% 0,93% 100%,0 100%);box-shadow:6px 0 0 var(--red);overflow:visible;}
+.sb-logo{padding:28px 24px 20px;font-family:var(--font-bangers);font-size:2rem;letter-spacing:5px;color:var(--red);text-shadow:3px 3px 0 var(--white);line-height:1;border-bottom:3px solid var(--gray2);flex-shrink:0;}
+.sb-logo small{display:block;font-family:var(--font-rubik);font-size:.45rem;letter-spacing:4px;color:var(--white);margin-top:4px;opacity:.7;}
+#nav-list{flex:1;display:flex;flex-direction:column;gap:8px;padding:24px 14px;overflow:hidden;}
+.nav-btn{position:relative;background:var(--gray2);border:none;color:var(--white);font-family:var(--font-rubik);font-size:.65rem;letter-spacing:3px;padding:16px 18px 16px 22px;text-align:left;cursor:none;clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%);transition:background var(--snap),color var(--snap),transform var(--snap),box-shadow var(--snap);display:flex;align-items:center;gap:10px;overflow:hidden;}
+.nav-btn:hover{background:var(--gray);transform:translateX(4px);}
+.nav-btn.active{background:var(--red);color:var(--white);transform:translateX(8px);box-shadow:4px 0 0 var(--yellow);}
+.nav-btn.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--yellow);}
+.nb-pip{width:6px;height:6px;border-radius:50%;background:var(--yellow);position:absolute;right:20px;opacity:0;transition:opacity var(--snap);}
+.nav-btn.active .nb-pip{opacity:1;animation:pip-pulse 1.2s ease-in-out infinite;}
+@keyframes pip-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+.sb-bottom{padding:18px 14px 24px;flex-shrink:0;}
+.audio-volume{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.audio-volume label{font-family:var(--font-rubik);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--white);}
+.audio-volume input[type=range]{width:100%;appearance:none;height:6px;border-radius:999px;background:rgba(255,255,255,.15);outline:none;}
+.audio-volume input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:var(--red);border:3px solid var(--white);cursor:pointer;}
+.audio-volume input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--red);border:3px solid var(--white);cursor:pointer;}
+#audio-btn{width:100%;background:var(--black);border:3px solid var(--red);color:var(--red);font-family:var(--font-rubik);font-size:.55rem;letter-spacing:3px;padding:14px 16px;cursor:none;display:flex;align-items:center;gap:10px;clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%);transition:background var(--snap),color var(--snap),transform var(--snap);}
+#audio-btn:hover{background:var(--red);color:var(--white);transform:translateX(2px);}
+#audio-btn.playing{background:var(--red);color:var(--white);}
+#stage{flex:1;height:100%;position:relative;overflow:hidden;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateX(60px);transition:opacity var(--slide),transform var(--slide);scrollbar-width:thin;scrollbar-color:var(--red) var(--black);}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.screen.exit-left{transform:translateX(-60px);opacity:0;}
+.screen{padding:40px 40px 60px;}
+.screen-title{font-family:var(--font-bangers);font-size:clamp(2.4rem,6vw,5rem);letter-spacing:4px;color:var(--red);margin-bottom:12px;position:relative;display:inline-block;text-transform:uppercase;}
+.screen-title::after{content:'';position:absolute;bottom:-10px;left:0;width:100%;height:5px;background:var(--red);transform:skewX(-8deg);}
+.section-copy{font-family:var(--font-marker);font-size:1rem;color:rgba(255,255,255,.9);line-height:1.85;max-width:760px;margin:16px 0 28px;}
+.section-copy strong{color:var(--yellow);}
+.home-burst{position:absolute;width:180vmax;height:180vmax;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.05;animation:spin 70s linear infinite;pointer-events:none;background:conic-gradient(from 0deg,#E50012 0deg 9deg,#000 9deg 18deg,#E50012 18deg 27deg,#000 27deg 36deg,#E50012 36deg 45deg,#000 45deg 54deg,#E50012 54deg 63deg,#000 63deg 72deg,#E50012 72deg 81deg,#000 81deg 90deg,#E50012 90deg 99deg,#000 99deg 108deg,#E50012 108deg 117deg,#000 117deg 126deg,#E50012 126deg 135deg,#000 135deg 144deg,#E50012 144deg 153deg,#000 153deg 162deg,#E50012 162deg 171deg,#000 171deg 180deg,#E50012 180deg 189deg,#000 189deg 198deg,#E50012 198deg 207deg,#000 207deg 216deg,#E50012 216deg 225deg,#000 225deg 234deg,#E50012 234deg 243deg,#000 243deg 252deg,#E50012 252deg 261deg,#000 261deg 270deg,#E50012 270deg 279deg,#000 279deg 288deg,#E50012 288deg 297deg,#000 297deg 306deg,#E50012 306deg 315deg,#000 315deg 324deg,#E50012 324deg 333deg,#000 333deg 342deg,#E50012 342deg 351deg,#000 351deg 360deg);}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+.home-dot-bg{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(229,0,18,.15) 1.5px,transparent 1.5px);background-size:22px 22px;pointer-events:none;}
+.home-slash, .home-slash-2{position:absolute;left:-10%;pointer-events:none;}
+.home-slash{width:120%;height:280px;background:var(--red);transform:skewY(-6deg);}
+.home-slash-2{width:120%;height:10px;background:var(--yellow);transform:skewY(-6deg) translateY(130px);}
+.home-content{position:relative;z-index:2;text-align:center;padding:48px 28px;max-width:900px;margin:0 auto;}
+.home-eyebrow{font-family:var(--font-rubik);font-size:.7rem;letter-spacing:8px;color:var(--black);background:var(--yellow);display:inline-block;padding:5px 24px;transform:rotate(-2deg) skewX(-6deg);margin-bottom:18px;animation:slide-left .5s cubic-bezier(.22,1,.36,1) .2s both;}
+.home-title{font-family:var(--font-bangers);font-size:clamp(5rem,14vw,10rem);line-height:.88;letter-spacing:6px;color:var(--white);text-shadow:6px 6px 0 var(--black),-2px -2px 0 var(--black);animation:slam .4s cubic-bezier(.22,1,.36,1) .4s both;display:flex;flex-direction:column;align-items:center;gap:0;}
+.home-title span{color:var(--black);-webkit-text-stroke:3px var(--white);text-shadow:none;display:block;line-height:.88;margin:0;padding:0;animation:slam .4s cubic-bezier(.22,1,.36,1) .55s both;}
+.home-title .word-fill{color:var(--white);-webkit-text-stroke:0;text-shadow:6px 6px 0 var(--black),-2px -2px 0 var(--black);}
+.home-sub{font-family:var(--font-marker);font-size:clamp(1rem,2.2vw,1.4rem);color:var(--white);margin-top:24px;transform:rotate(-1.5deg);text-shadow:2px 2px 0 var(--red);animation:slide-right .5s cubic-bezier(.22,1,.36,1) .7s both;}
+.jitter{display:inline-block;animation:jitter .12s steps(1) infinite;}
+.home-quicknav{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:40px;animation:slide-left .5s cubic-bezier(.22,1,.36,1) .9s both;}
+.qnav-btn{position:relative;font-family:var(--font-rubik);font-size:.65rem;letter-spacing:3px;color:var(--white);background:transparent;border:2px solid var(--white);padding:14px 30px;cursor:none;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%);transition:background var(--snap),color var(--snap),transform var(--snap),box-shadow var(--snap);overflow:hidden;}
+.qnav-btn::after{content:'';position:absolute;inset:0;background:var(--white);transform:translateX(-101%);transition:transform var(--snap);z-index:0;}
+.qnav-btn:hover::after{transform:translateX(0);}
+.qnav-btn:hover{color:var(--black);box-shadow:6px 6px 0 var(--red);transform:translateX(4px);}
+.qnav-btn span{position:relative;z-index:1;}
+@keyframes jitter{0%{transform:translate(0,0) rotate(0);}20%{transform:translate(-1px,1px) rotate(-.4deg);}40%{transform:translate(1px,-1px) rotate(.4deg);}60%{transform:translate(-1px,0) rotate(.2deg);}80%{transform:translate(1px,1px) rotate(-.3deg);}100%{transform:translate(0,0) rotate(0);}}
+@keyframes slide-left{from{opacity:0;transform:translateX(-70px) rotate(4deg);}to{opacity:1;transform:none;}}
+@keyframes slide-right{from{opacity:0;transform:translateX(70px);}to{opacity:1;transform:none;}}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:24px;}
+.card{background:rgba(255,255,255,.04);border:2px solid rgba(229,0,18,.25);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:transform var(--snap),border-color var(--snap);}
+.card:hover{transform:translateY(-6px);border-color:var(--red);}
+.card-img{position:relative;overflow:hidden;}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;display:block;}
+.card:hover .card-img img{transform:scale(1.05);}
+.gif-frame{border-bottom:4px solid var(--red);}
+.gif-badge{position:absolute;top:16px;left:16px;padding:8px 12px;background:var(--red);color:var(--black);font-family:var(--font-rubik);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:999px;z-index:2;box-shadow:0 0 0 3px rgba(255,255,255,.05);}
+.card-arcana{position:absolute;right:16px;bottom:16px;padding:10px 14px;background:rgba(0,0,0,.75);color:var(--white);font-family:var(--font-rubik);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:999px;z-index:2;}
+.card-body{padding:24px;position:relative;}
+.card-body h3{font-family:var(--font-bangers);font-size:1.6rem;letter-spacing:2px;margin-bottom:10px;}
+.char-role{font-family:var(--font-rubik);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:14px;display:block;}
+.char-role span{color:var(--white);}
+.card-body p{font-family:var(--font-marker);font-size:.95rem;line-height:1.85;color:rgba(255,255,255,.88);}
+.stat-bar-row{margin-top:18px;}
+.stat-label{font-family:var(--font-rubik);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;color:rgba(255,255,255,.7);}
+.stat-track{width:100%;height:10px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;}
+.stat-fill{height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--red));border-radius:999px;transition:width .7s ease;}
+.about-wrap{display:grid;grid-template-columns:1.4fr .9fr;gap:28px;align-items:center;margin-top:32px;}
+.about-text h2{font-family:var(--font-bangers);font-size:clamp(3rem,7vw,5.5rem);line-height:.95;letter-spacing:4px;margin-bottom:20px;}
+.about-text p{max-width:680px;font-size:1rem;line-height:1.85;color:rgba(255,255,255,.92);}
+.about-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px;}
+.friend-card{background:rgba(255,255,255,.04);border:2px solid rgba(229,0,18,.3);border-radius:22px;overflow:hidden;box-shadow:0 16px 32px rgba(0,0,0,.2);transition:transform var(--snap);}
+.friend-card:hover{transform:translateY(-6px);}
+.friend-image img{width:100%;height:100%;object-fit:cover;display:block;}
+.friend-name{font-family:var(--font-bangers);font-size:1rem;letter-spacing:2px;padding:18px;text-transform:uppercase;}
+.about-badge{background:var(--red);color:var(--black);padding:40px 24px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-family:var(--font-bangers);font-size:3.5rem;letter-spacing:6px;line-height:1;box-shadow:12px 12px 0 rgba(0,0,0,.3);}
+.about-badge small{font-size:1rem;line-height:1.1;display:block;margin-top:12px;letter-spacing:4px;}
+.manifesto-inner{display:grid;gap:18px;max-width:820px;margin-top:32px;line-height:1.1;}
+.m-line{display:block;position:relative;z-index:1;mix-blend-mode:normal;}
+.m-seal{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px;padding:22px 24px;border:3px solid var(--red);border-radius:999px;overflow:hidden;box-shadow:0 0 0 6px rgba(229,0,18,.1);}
+.m-seal-line{flex:1;height:1px;background:rgba(255,255,255,.25);}
+.m-seal-txt{font-family:var(--font-bangers);font-size:1.4rem;letter-spacing:5px;}
+.palace-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:32px;}
+.palace{position:relative;overflow:hidden;border-radius:28px;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:transform var(--snap);}
+.palace:hover{transform:translateY(-6px);}
+.palace img{width:100%;height:320px;object-fit:cover;display:block;filter:grayscale(20%) contrast(115%);}
+.palace-slash{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,rgba(229,0,18,.15),transparent 45%);mix-blend-mode:color-burn;}
+.palace-label{position:absolute;bottom:56px;left:24px;color:var(--white);font-family:var(--font-bangers);font-size:1rem;letter-spacing:3px;text-transform:uppercase;}
+.palace-cap{position:absolute;bottom:20px;left:24px;right:24px;font-family:var(--font-marker);font-size:.95rem;line-height:1.4;color:rgba(255,255,255,.88);}
+.feature-grid,.team-grid,.highlight-grid{display:grid;gap:24px;}
+.team-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+.feature-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.highlight-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.action-row{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:32px;}
+.action-btn{font-family:var(--font-rubik);font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--white);background:transparent;border:2px solid var(--white);padding:14px 28px;cursor:none;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%);transition:background var(--snap),color var(--snap),transform var(--snap),box-shadow var(--snap);position:relative;overflow:hidden;}
+.action-btn::after{content:'';position:absolute;inset:0;background:var(--white);transform:translateX(-101%);transition:transform var(--snap);z-index:0;}
+.action-btn:hover::after{transform:translateX(0);}
+.action-btn:hover{color:var(--black);box-shadow:6px 6px 0 var(--red);transform:translateX(4px);}
+.action-btn span{position:relative;z-index:1;}
+.feature-card{background:var(--black);border:3px solid var(--red);color:var(--white);overflow:hidden;box-shadow:8px 8px 0 rgba(0,0,0,.8);transition:transform var(--snap),box-shadow var(--snap);}
+.feature-card:hover{transform:translate(-5px,-5px);box-shadow:12px 12px 0 rgba(0,0,0,.8);}
+.feature-ico{height:120px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(229,0,18,.4),rgba(255,215,0,.15));}
+.feature-ico span{font-family:var(--font-bangers);font-size:3rem;}
+.feature-content{padding:20px;}
+.feature-title{font-family:var(--font-bangers);font-size:1.5rem;letter-spacing:2px;margin-bottom:12px;}
+.feature-copy{font-family:var(--font-marker);font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.88);}
+.feature-tag,.highlight-tag{font-family:var(--font-rubik);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);display:block;margin-bottom:10px;}
+.highlight-card{background:var(--black);border:3px solid var(--red);color:var(--white);overflow:hidden;box-shadow:8px 8px 0 rgba(0,0,0,.7);transition:transform var(--snap),box-shadow var(--snap);}
+.highlight-card:hover{transform:translate(-5px,-5px);box-shadow:12px 12px 0 rgba(0,0,0,.7);}
+.highlight-media{height:220px;overflow:hidden;}
+.highlight-media img{width:100%;height:100%;object-fit:cover;transition:transform var(--snap),filter var(--snap);filter:grayscale(40%) contrast(120%);}
+.highlight-card:hover .highlight-media img{transform:scale(1.05);filter:grayscale(0%) contrast(115%);}
+.highlight-body{padding:20px;}
+.highlight-title{font-family:var(--font-bangers);font-size:1.4rem;margin-bottom:10px;}
+.highlight-copy{font-family:var(--font-marker);font-size:.95rem;line-height:1.75;color:rgba(255,255,255,.9);}
+#hamburger{position:fixed;top:22px;left:22px;width:50px;height:50px;background:rgba(0,0,0,.85);color:var(--white);border:3px solid var(--red);border-radius:18px;z-index:110;display:none;align-items:center;justify-content:center;font-size:1.2rem;cursor:none;}
+@media(max-width:980px){#sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform var(--slide);width:calc(var(--nav-w) + 20px);}
+#sidebar.open{transform:translateX(0);}
+#stage{padding-left:0;}
+#hamburger{display:flex;}
+.screen{padding:28px 22px 50px;}
+.about-wrap{grid-template-columns:1fr;}
+.about-cards{grid-template-columns:1fr;}
+.palace img{height:240px;}
+.highlight-media{height:180px;}
+}
+</style>
+</head>
+<body>
+<div id="noise"></div>
+<div id="cur-o"></div>
+<div id="cur-i"></div>
+<div id="flash"></div>
+<audio id="bgm" loop preload="auto"><source src="music/NoMoreWhatIfs.mp3" type="audio/mpeg"/></audio>
+<audio id="sfx-h" preload="auto"><source src="music/whoosh.mp3" type="audio/mpeg"/></audio>
+<audio id="sfx-c" preload="auto"><source src="music/click.mp3" type="audio/mpeg"/></audio>
+<button id="hamburger" aria-label="Open menu">☰</button>
+<div id="app">
+  <nav id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sb-logo">PT<br><small>PHANTOM THIEVES</small></div>
+    <div id="nav-list">
+      <button class="nav-btn active" data-target="home"><span>HOME</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="confidants"><span>CONFIDANTS</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="members"><span>MEMBERS</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="abilities"><span>ABILITIES</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="highlights"><span>HIGHLIGHTS</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="about"><span>ABOUT US</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="manifesto"><span>MANIFESTO</span><span class="nb-pip"></span></button>
+      <button class="nav-btn" data-target="palaces"><span>PALACES</span><span class="nb-pip"></span></button>
+    </div>
+    <div class="sb-bottom">
+      <div class="audio-volume"><label for="volume-slider">VOLUME</label><input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume control"/></div>
+      <button id="audio-btn" title="Toggle BGM"><span id="audio-label">MUSIC ON</span></button>
+    </div>
+  </nav>
+  <main id="stage">
+    <section id="screen-home" class="screen active" data-screen="home">
+      <div class="home-burst"></div>
+      <div class="home-dot-bg"></div>
+      <div class="home-slash"></div>
+      <div class="home-slash-2"></div>
+      <div class="home-content">
+        <div class="home-eyebrow">THE PHANTOM THIEVES OF HEARTS</div>
+        <h1 class="home-title"><span class="word-fill">TAKE</span><span>YOUR</span><span class="word-fill">HEART</span></h1>
+        <p class="home-sub">— <span class="jitter">Steal</span> it, before it steals you. —</p>
+        <div class="home-quicknav">
+          <button class="qnav-btn" data-target="confidants"><span>CONFIDANTS</span></button>
+          <button class="qnav-btn" data-target="members"><span>MEMBERS</span></button>
+          <button class="qnav-btn" data-target="abilities"><span>ABILITIES</span></button>
+          <button class="qnav-btn" data-target="highlights"><span>HIGHLIGHTS</span></button>
+          <button class="qnav-btn" data-target="about"><span>ABOUT US</span></button>
+          <button class="qnav-btn" data-target="manifesto"><span>MANIFESTO</span></button>
+          <button class="qnav-btn" data-target="palaces"><span>PALACES</span></button>
+        </div>
+      </div>
+    </section>
+    <section id="screen-confidants" class="screen halftone" data-screen="confidants">
+      <h2 class="screen-title">CONFIDANTS</h2>
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/t1/700/400" alt="Joker"/></div>
+          <div class="gif-badge">LEADER</div>
+          <div class="card-arcana">FOOL</div>
+          <div class="card-body">
+            <h3>Joker</h3>
+            <div class="char-role">PHANTOM THIEF <span>Leader</span></div>
+            <p>Silent, sharp, and unshakably calm. Joker steers the crew through every heist with intuition and troublemaking instinct.</p>
+            <div class="stat-bar-row"><div class="stat-label">STANCE</div><div class="stat-track"><div class="stat-fill" data-w="86%"></div></div></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/t2/700/400" alt="Skull"/></div>
+          <div class="gif-badge">RECKLESS</div>
+          <div class="card-arcana">CHARIOT</div>
+          <div class="card-body">
+            <h3>Skull</h3>
+            <div class="char-role">HEARTSTEALER <span>Rush</span></div>
+            <p>Full throttle forward. Skull crashes through every trap with bravado, fire, and a grin that never quits.</p>
+            <div class="stat-bar-row"><div class="stat-label">TEMPO</div><div class="stat-track"><div class="stat-fill" data-w="94%"></div></div></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/t3/700/400" alt="Morgana"/></div>
+          <div class="gif-badge">TACTICIAN</div>
+          <div class="card-arcana">MAGIC</div>
+          <div class="card-body">
+            <h3>Morgana</h3>
+            <div class="char-role">NAVIGATOR <span>Guide</span></div>
+            <p>Sharp-eyed and sharp-tongued, Morgana keeps the group focused with plans, tricks, and relentless energy.</p>
+            <div class="stat-bar-row"><div class="stat-label">FOCUS</div><div class="stat-track"><div class="stat-fill" data-w="78%"></div></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="screen-members" class="screen halftone" data-screen="members">
+      <h2 class="screen-title">MEMBERS</h2>
+      <p class="section-copy">A dossier of the crew that makes every strike feel personal — from muscle to mastermind.</p>
+      <div class="team-grid">
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/rj/720/420" alt="Ryuji"/></div>
+          <div class="gif-badge">CHARGE</div>
+          <div class="card-arcana">STRENGTH</div>
+          <div class="card-body">
+            <h3>Ryuji</h3>
+            <div class="char-role">ENERGY <span>Breaker</span></div>
+            <p>Raw speed and heart, ready to punch through walls and expectations. Ryuji’s presence is the team’s explosive spark.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/futaba/720/420" alt="Futaba"/></div>
+          <div class="gif-badge">HACKER</div>
+          <div class="card-arcana">SAGE</div>
+          <div class="card-body">
+            <h3>Futaba</h3>
+            <div class="char-role">DIGITAL <span>Support</span></div>
+            <p>The group’s unseen edge. Futaba turns code into combat, keeping enemies disoriented while the crew moves through the shadows.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-img gif-frame"><img src="https://picsum.photos/seed/makoto/720/420" alt="Makoto"/></div>
+          <div class="gif-badge">ANALYST</div>
+          <div class="card-arcana">JUSTICE</div>
+          <div class="card-body">
+            <h3>Makoto</h3>
+            <div class="char-role">TACTIC <span>Anchor</span></div>
+            <p>Sharp, steady, and strategic. Makoto brings precision to every plan and keeps the team balanced when the risk climbs.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="screen-abilities" class="screen" data-screen="abilities">
+      <h2 class="screen-title">ABILITIES</h2>
+      <p class="section-copy">Signature moves and Phantom tricks with power, speed, and theatrical drama.</p>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-ico"><span>⚡</span></div><div class="feature-content"><span class="feature-tag">SPEED</span><h3 class="feature-title">Psycho Rush</h3><p class="feature-copy">A kinetic barrage that moves faster than thought, overwhelming defenses and seizing control.</p></div></article>
+        <article class="feature-card"><div class="feature-ico"><span>🔥</span></div><div class="feature-content"><span class="feature-tag">STYLE</span><h3 class="feature-title">Flare Rebellion</h3><p class="feature-copy">Explosive flame and showmanship combined — each strike leaves a mark on the battlefield and the soul.</p></div></article>
+        <article class="feature-card"><div class="feature-ico"><span>🔮</span></div><div class="feature-content"><span class="feature-tag">DOMINANCE</span><h3 class="feature-title">Heart Surge</h3><p class="feature-copy">A peak burst of energy that turns the tide, powered by conviction and the crew’s shared resolve.</p></div></article>
+        <article class="feature-card"><div class="feature-ico"><span>👁️</span></div><div class="feature-content"><span class="feature-tag">STEALTH</span><h3 class="feature-title">Ghost Drift</h3><p class="feature-copy">Slip through the unseen gaps, disappear into the chaos, and strike before the alarm can sound.</p></div></article>
+      </div>
+    </section>
+    <section id="screen-highlights" class="screen halftone" data-screen="highlights">
+      <h2 class="screen-title">HIGHLIGHTS</h2>
+      <p class="section-copy">Visual moments from the mission vault: sharp, raw, and built to feel cinematic.</p>
+      <div class="highlight-grid">
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight1/720/420" alt="Heist"/></div><div class="highlight-body"><span class="highlight-tag">MISSION</span><h3 class="highlight-title">Midnight Infiltration</h3><p class="highlight-copy">A slick, dangerous entry where every shadow became cover and every movement had meaning.</p></div></article>
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight2/720/420" alt="Style"/></div><div class="highlight-body"><span class="highlight-tag">STYLE</span><h3 class="highlight-title">Crimson Motion</h3><p class="highlight-copy">The team’s visuals are the weapon: bold, jagged, and unforgettable in every frame.</p></div></article>
+        <article class="highlight-card"><div class="highlight-media"><img src="https://picsum.photos/seed/highlight3/720/420" alt="Tech"/></div><div class="highlight-body"><span class="highlight-tag">TECH</span><h3 class="highlight-title">Digital Command</h3><p class="highlight-copy">Encrypted grids and silent hacks create the backdrop for every successful operation.</p></div></article>
+      </div>
+    </section>
+    <section id="screen-about" class="screen" data-screen="about">
+      <h2 class="screen-title">ABOUT US</h2>
+      <div class="about-wrap">
+        <div class="about-text">
+          <h2>WHO<br>ARE<br>WE?</h2>
+          <p>Phantom Thieves are the pulse under the city’s skin: loud, bold, and ruthless in pursuit of a clean heart. We move like a flash of red through darkness, using style and strategy to take what the world refuses to give.</p>
+          <div class="about-cards">
+            <div class="friend-card friend-tilt-a"><div class="friend-image"><img src="https://picsum.photos/seed/friend1/400/240" alt="Echo"/></div><div class="friend-name">Code of Honor</div></div>
+            <div class="friend-card friend-tilt-b"><div class="friend-image"><img src="https://picsum.photos/seed/friend2/400/240" alt="Style"/></div><div class="friend-name">Visual Fury</div></div>
+            <div class="friend-card friend-tilt-c"><div class="friend-image"><img src="https://picsum.photos/seed/friend3/400/240" alt="Chaos"/></div><div class="friend-name">Dark Pulse</div></div>
+            <div class="friend-card friend-tilt-d"><div class="friend-image"><img src="https://picsum.photos/seed/friend4/400/240" alt="Crew"/></div><div class="friend-name">Team Creed</div></div>
+          </div>
+        </div>
+        <div class="about-badge">PT<small>PHANTOM<br>THIEVES</small></div>
+      </div>
+    </section>
+    <section id="screen-manifesto" class="screen halftone" data-screen="manifesto">
+      <h2 class="screen-title">MANIFESTO</h2>
+      <div class="manifesto-inner">
+        <span class="m-line m-rubik rot-a" style="font-size:.65rem;letter-spacing:4px;color:var(--white);">— CALLING CARD —</span>
+        <span class="m-line m-bangers rot-b" style="font-size:clamp(2.5rem,7vw,5.5rem);">We have decided</span>
+        <span class="m-line m-anton rot-c" style="font-size:clamp(1.8rem,5vw,4rem);">to take your</span>
+        <span class="m-line m-marker rot-a" style="font-size:clamp(3rem,8vw,6.5rem);color:var(--red);">TREASURE.</span>
+        <span class="m-line m-rubik rot-d" style="color:#ccc;">THE DISTORTION THAT DWELLS IN YOUR HEART —</span>
+        <span class="m-line m-bangers rot-b" style="font-size:clamp(1.5rem,4vw,3rem);">we shall accept it, with gratitude.</span>
+        <span class="m-line m-marker rot-c" style="font-size:clamp(.9rem,2vw,1.4rem);color:#888;margin-top:16px;">Yours sincerely,</span>
+        <span class="m-line m-bangers rot-a" style="font-size:clamp(2rem,6vw,4.5rem);color:var(--red);">The <span class="jitter">Phantom</span> Thieves</span>
+        <div class="m-seal"><div class="m-seal-line"></div><span class="m-seal-txt">PT</span><div class="m-seal-line"></div></div>
+      </div>
+    </section>
+    <section id="screen-palaces" class="screen" data-screen="palaces">
+      <h2 class="screen-title">PALACES</h2>
+      <div class="palace-grid">
+        <div class="palace"><img src="https://picsum.photos/seed/t4/700/400" alt="Kamoshida"/><div class="palace-slash"></div><div class="palace-label">PALACE I</div><div class="palace-cap">Kamoshida's Palace — Castle of Lust</div></div>
+        <div class="palace"><img src="https://picsum.photos/seed/t5/700/400" alt="Madarame"/><div class="palace-slash"></div><div class="palace-label">PALACE II</div><div class="palace-cap">Madarame's Palace — Museum of Vanity</div></div>
+        <div class="palace"><img src="https://picsum.photos/seed/t6/700/400" alt="Kaneshiro"/><div class="palace-slash"></div><div class="palace-label">PALACE III</div><div class="palace-cap">Kaneshiro's Palace — Bank of Greed</div></div>
+        <div class="palace"><img src="https://picsum.photos/seed/t7/700/400" alt="Futaba"/><div class="palace-slash"></div><div class="palace-label">PALACE IV</div><div class="palace-cap">Futaba's Palace — Tomb of Isolation</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(() => {
+  'use strict';
+  const co = document.getElementById('cur-o');
+  const ci = document.getElementById('cur-i');
+  let mx = 0, my = 0, ox = 0, oy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; ci.style.left = mx + 'px'; ci.style.top = my + 'px'; });
+  (function loop(){ ox += (mx - ox) * .14; oy += (my - oy) * .14; co.style.left = ox + 'px'; co.style.top = oy + 'px'; requestAnimationFrame(loop); })();
+  document.querySelectorAll('button,a,.card,.palace').forEach(el => { el.addEventListener('mouseenter', () => document.body.classList.add('hov')); el.addEventListener('mouseleave', () => document.body.classList.remove('hov')); });
+  const flash = document.getElementById('flash');
+  function doFlash(){ flash.classList.remove('go'); void flash.offsetWidth; flash.classList.add('go'); }
+  const volumeSlider = document.getElementById('volume-slider');
+  const bgm = document.getElementById('bgm');
+  const sfxH = document.getElementById('sfx-h');
+  const sfxC = document.getElementById('sfx-c');
+  const aBtn = document.getElementById('audio-btn');
+  const aLbl = document.getElementById('audio-label');
+  bgm.volume = 0.5;
+  bgm.muted = true;
+  if(volumeSlider){ volumeSlider.value = bgm.volume; volumeSlider.addEventListener('input', event => { const newVolume = parseFloat(event.target.value); bgm.volume = newVolume; bgm.muted = newVolume === 0; }); }
+  function setAudioState(isPlaying){ aBtn.classList.toggle('playing', isPlaying); aLbl.textContent = isPlaying ? 'MUSIC OFF' : 'MUSIC ON'; }
+  bgm.addEventListener('play', ()=>setAudioState(true));
+  bgm.addEventListener('pause', ()=>setAudioState(false));
+  setAudioState(false);
+  aBtn.addEventListener('click', ()=>{ if(bgm.paused || bgm.ended){ bgm.muted = false; bgm.play().catch(()=>{}); } else { bgm.pause(); } doFlash(); });
+  function playSFX(el){ if(!el || !el.src) return; el.currentTime = 0; el.play().catch(()=>{}); }
+  document.querySelectorAll('button,.card,.palace').forEach(el => { el.addEventListener('mouseenter', ()=>playSFX(sfxH)); el.addEventListener('click', ()=>playSFX(sfxC)); });
+  const screens = document.querySelectorAll('.screen');
+  const navBtns = document.querySelectorAll('.nav-btn, .qnav-btn');
+  let current = 'home';
+  function switchTo(id){ if(id === current) return; doFlash(); const oldScreen = document.getElementById('screen-' + current); if(oldScreen){ oldScreen.classList.remove('active'); oldScreen.classList.add('exit-left'); setTimeout(()=>oldScreen.classList.remove('exit-left'), 400); } const newScreen = document.getElementById('screen-' + id); if(newScreen){ newScreen.classList.add('active'); newScreen.scrollTop = 0; } document.querySelectorAll('.nav-btn').forEach(b=>{ b.classList.toggle('active', b.dataset.target===id); }); current = id; sidebar.classList.remove('open'); }
+  navBtns.forEach(btn => { btn.addEventListener('click', ()=>switchTo(btn.dataset.target)); });
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  hamburger.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); doFlash(); });
+  document.getElementById('stage').addEventListener('click', ()=>{ sidebar.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>
